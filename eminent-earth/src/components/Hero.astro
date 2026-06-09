@@ -17,7 +17,8 @@
       <span class="term-title">goldilocks</span>
     </div>
     <div class="term-body">
-      <div class="lines" id="termLines"></div>
+      <div id="termLines"></div>
+      <span class="cursor" id="cursor">▋</span>
     </div>
     <div class="term-footer">love your cURLs &nbsp;·&nbsp; 🫧</div>
   </div>
@@ -97,7 +98,25 @@
   .grey { background: #d9d4c7; }
   .gold { background: #b87333; }
   .term-title { font-size: 12px; color: #888; margin-left: 6px; }
-  .term-body { padding: 1.2rem 1.4rem; font-size: 13px; line-height: 1.8; min-height: 200px; color: #333; }
+  .term-body {
+    padding: 1.2rem 1.4rem;
+    font-size: 13px;
+    line-height: 1.8;
+    height: 260px;
+    overflow: hidden;
+    color: #333;
+    position: relative;
+  }
+  .cursor {
+    display: inline-block;
+    color: #b87333;
+    animation: blink 1s step-end infinite;
+    font-weight: 400;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
   .term-footer {
     border-top: 0.5px solid #d9d4c7;
     padding: 8px 14px;
@@ -138,37 +157,58 @@
 
 <script>
 const lines = [
-  { text: '$ goldilocks fetch', class: 'cmd' },
-  { text: '↳ fetching pipelines from org_aura_1...', class: 'dim' },
-  { text: '↳ 3 pipelines · sanitising · anonymising', class: 'dim' },
-  { text: '' },
-  { text: '$ goldilocks visualise', class: 'cmd' },
-  { text: 'org_pipeline_1', class: 'tree' },
-  { text: '├── anon_snap_a (mapper)', class: 'tree' },
-  { text: '├── anon_snap_b (http_client)', class: 'tree' },
-  { text: '└── anon_snap_c (json_formatter)', class: 'tree' },
-  { text: '' },
-  { text: '$ goldilocks ask "what does this pipeline do?"', class: 'cmd' },
-  { text: '🫧 maps auth tokens → calls external api → formats response', class: 'accent' },
+  { text: '$ goldilocks fetch', cls: 'cmd' },
+  { text: '↳ fetching pipelines from org_aura_1...', cls: 'dim' },
+  { text: '↳ 3 pipelines · sanitising · anonymising', cls: 'dim' },
+  { text: '', cls: 'gap' },
+  { text: '$ goldilocks visualise', cls: 'cmd' },
+  { text: 'org_pipeline_1', cls: 'tree' },
+  { text: '├── anon_snap_a (mapper)', cls: 'tree' },
+  { text: '├── anon_snap_b (http_client)', cls: 'tree' },
+  { text: '└── anon_snap_c (json_formatter)', cls: 'tree' },
+  { text: '', cls: 'gap' },
+  { text: '$ goldilocks ask "what does this pipeline do?"', cls: 'cmd' },
+  { text: '🫧 maps auth tokens → calls external api → formats response', cls: 'accent' },
 ];
 
-const container = document.getElementById('termLines');
-lines.forEach((line, i) => {
-  setTimeout(() => {
-    const el = document.createElement('div');
-    el.textContent = line.text;
-    el.style.cssText = `
-      opacity: 0;
-      transform: translateY(4px);
-      transition: opacity .3s ease, transform .3s ease;
-      color: ${line.class === 'dim' ? '#aaa' : line.class === 'accent' ? '#b87333' : '#333'};
-      font-weight: ${line.class === 'cmd' ? '500' : '400'};
-    `;
-    container?.appendChild(el);
-    requestAnimationFrame(() => {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-    });
-  }, i * 400);
-});
+const colors = {
+  cmd: { color: '#333', fontWeight: '600' },
+  dim: { color: '#aaa', fontWeight: '400' },
+  tree: { color: '#555', fontWeight: '400' },
+  accent: { color: '#b87333', fontWeight: '500' },
+  gap: { color: 'transparent', fontWeight: '400' },
+};
+
+function runAnimation() {
+  const container = document.getElementById('termLines');
+  const cursor = document.getElementById('cursor');
+  if (!container || !cursor) return;
+
+  container.innerHTML = '';
+
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.textContent = line.text || '\u00A0';
+      const style = colors[line.cls] || colors.tree;
+      el.style.color = style.color;
+      el.style.fontWeight = style.fontWeight;
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.3s ease';
+      container.appendChild(el);
+      requestAnimationFrame(() => {
+        setTimeout(() => { el.style.opacity = '1'; }, 20);
+      });
+
+      // loop after last line
+      if (i === lines.length - 1) {
+        setTimeout(() => {
+          runAnimation();
+        }, 3000);
+      }
+    }, i * 450);
+  });
+}
+
+runAnimation();
 </script>
