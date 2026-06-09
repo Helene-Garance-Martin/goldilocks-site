@@ -15,6 +15,7 @@
       <span class="dot grey"></span>
       <span class="dot gold"></span>
       <span class="term-title">goldilocks</span>
+      <button id="restartBtn" class="restart">restart ↺</button>
     </div>
     <div class="term-body">
       <div id="termLines"></div>
@@ -106,6 +107,7 @@
     overflow: hidden;
     color: #333;
     position: relative;
+    
   }
   .cursor {
     display: inline-block;
@@ -153,6 +155,24 @@
     .hero { grid-template-columns: 1fr; }
     .principle { grid-template-columns: 1fr; }
   }
+
+  .restart {
+    display: none;
+    position: absolute;
+    bottom: 1rem;
+    right: 1.2rem;
+    background: none;
+    border: none;
+    font-family: var(--sl-font-mono);
+    font-size: 11px;
+    color: #b87333;
+    cursor: pointer;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+  .restart:hover { opacity: 1; }
 </style>
 
 <script>
@@ -183,9 +203,12 @@ const colors = {
 function runAnimation() {
   const container = document.getElementById('termLines');
   const cursor = document.getElementById('cursor');
-  if (!container || !cursor) return;
+  const restartBtn = document.getElementById('restartBtn');
+  if (!container || !cursor || !restartBtn) return;
 
   container.innerHTML = '';
+  cursor.style.display = 'inline-block';
+  restartBtn.style.display = 'none';
 
   lines.forEach((line, i) => {
     setTimeout(() => {
@@ -203,12 +226,14 @@ function runAnimation() {
 
       if (i === lines.length - 1) {
         setTimeout(() => {
-          runAnimation();
-        }, 3000);
+          cursor.style.display = 'none';
+          restartBtn.style.display = 'flex';
+        }, 800);
       }
     }, i * 450);
   });
 }
 
+document.getElementById('restartBtn')?.addEventListener('click', runAnimation);
 runAnimation();
 </script>
