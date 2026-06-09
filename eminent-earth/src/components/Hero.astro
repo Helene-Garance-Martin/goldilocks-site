@@ -15,11 +15,13 @@
       <span class="dot grey"></span>
       <span class="dot gold"></span>
       <span class="term-title">goldilocks</span>
-      <button id="restartBtn" class="restart">restart ↺</button>
+      
     </div>
+      
     <div class="term-body">
       <div id="termLines"></div>
       <span class="cursor" id="cursor">▋</span>
+      <button id="restartBtn" class="restart">restart ↺</button>
     </div>
     <div class="term-footer">love your cURLs &nbsp;·&nbsp; 🫧</div>
   </div>
@@ -79,7 +81,7 @@
     background: #f7f5f0;
     border: 0.5px solid #d9d4c7;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: clip;
     font-family: var(--sl-font-mono);
   }
   .term-bar {
@@ -103,7 +105,7 @@
     padding: 1.2rem 1.4rem;
     font-size: 13px;
     line-height: 1.8;
-    height: 260px;
+    height: 320px;
     overflow: hidden;
     color: #333;
     position: relative;
@@ -159,7 +161,7 @@
   .restart {
     display: none;
     position: absolute;
-    bottom: 1rem;
+    bottom: 0.8rem;
     right: 1.2rem;
     background: none;
     border: none;
@@ -172,6 +174,7 @@
     opacity: 0.7;
     transition: opacity 0.2s ease;
   }
+
   .restart:hover { opacity: 1; }
 </style>
 
