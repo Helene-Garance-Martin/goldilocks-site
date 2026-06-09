@@ -163,12 +163,13 @@ const lines = [
   { text: '', cls: 'gap' },
   { text: '$ goldilocks visualise', cls: 'cmd' },
   { text: 'org_pipeline_1', cls: 'tree' },
-  { text: '├── anon_snap_a (mapper)', cls: 'tree' },
-  { text: '├── anon_snap_b (http_client)', cls: 'tree' },
-  { text: '└── anon_snap_c (json_formatter)', cls: 'tree' },
+  { text: '├── anon_step_a (transform)', cls: 'tree' },
+  { text: '├── anon_step_b (http_client)', cls: 'tree' },
+  { text: '└── anon_step_c (formatter)', cls: 'tree' },
   { text: '', cls: 'gap' },
   { text: '$ goldilocks ask "what does this pipeline do?"', cls: 'cmd' },
-  { text: '🫧 maps auth tokens → calls external api → formats response', cls: 'accent' },
+  { text: '🫧 just right · transform → call → format', cls: 'accent' },
+  { text: '✓ 0 anomalies · lineage mapped', cls: 'accent' },
 ];
 
 const colors = {
@@ -200,7 +201,6 @@ function runAnimation() {
         setTimeout(() => { el.style.opacity = '1'; }, 20);
       });
 
-      // loop after last line
       if (i === lines.length - 1) {
         setTimeout(() => {
           runAnimation();
